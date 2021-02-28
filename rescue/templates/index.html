@@ -9,6 +9,9 @@
     Articles are provided as a gzipped file with one article per line (in json format).
     Annotations contain all project settings as well as codebooks and manual codings in JSON format.
     </p>
+<p>Please note that we are currently exporting all projects. If your project is labelled 'in progress',
+  and you need access to the file, please email <a href="mailto:wouter@vanatteveldt.com">Wouter van Atteveldt</a> and request for your project export to be expedited.
+  </p>
 
     <table class="table table-hover">
     <tr>
@@ -26,7 +29,15 @@
                       <em style="color: grey">(Export in progress)</em>
                   {% endif %}
               </td>
-          </tr>
+
+                        <td>
+                  {% if p.has_annotations %}
+                      <a href="{% url 'download_annotations' project=p.id %}">Download</a> ({{ p.articles_size }})
+                  {% else %}
+                      <em style="color: grey">(Export in progress)</em>
+                  {% endif %}
+              </td>
+	  </tr>
     {%  endfor %}
     </table>
 

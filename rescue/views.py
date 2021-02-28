@@ -31,7 +31,7 @@ def add_suffix(size: int) -> str:
 
 @login_required
 def index(request):
-    projects = [pr.project for pr in ProjectRole.objects.filter(user=request.user, role__label='admin').order_by("pk")]
+    projects = [pr.project for pr in ProjectRole.objects.filter(user=request.user, role__label='admin').order_by("project__pk")]
     for p in projects:
         articles = articles_file(p.pk)
         p.has_articles = articles.exists()

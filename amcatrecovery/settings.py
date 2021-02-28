@@ -11,10 +11,12 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+ALLOWED_HOSTS = ["recovery.amcat.nl"]
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -23,10 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'roj+$)wqoznoyp*ug=!3xrd)-yu!7j7@c!el^wc%+^7af%9iab'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+DEBUG = bool(os.environ.get("DJANGO_DEBUG"))
+print("Starting AmCAT recovery, debug:", DEBUG)
 
 # Application definition
 
@@ -49,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+LOGIN_REDIRECT_URL = '/'
 
 ROOT_URLCONF = 'amcatrecovery.urls'
 
@@ -77,7 +78,7 @@ WSGI_APPLICATION = 'amcatrecovery.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'amcatvu_meta',
+        'NAME': 'amcatrecovery',
     }
 }
 
@@ -119,3 +120,29 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / "static"
+
+LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+                    'console': {
+                                    'class': 'logging.StreamHandler',
+                                },
+                },
+        'root': {
+                    'handlers': ['console'],
+                    'level': 'INFO',
+                },
+    }
+
+if not DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_HOST = "smtp.gmail.com"
+    EMAIL_PORT = 587
+    EMAIL_HOST_USER = "amcat.vu@gmail.com"
+    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+    EMAIL_USE_TLS = 'yes'
+else:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
