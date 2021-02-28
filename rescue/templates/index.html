@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <h1>Welcome, {% if user.last_name %}{{ user.first_name }} {{ user.last_name }} {% else %}{{ user.username }} {% endif %}</h1>
+
+    <p>Below is a list of all projects of which you are administrator.
+    You can choose to download the articles, or the annotations.
+    Articles are provided as a gzipped file with one article per line (in json format).
+    Annotations contain all project settings as well as codebooks and manual codings in JSON format.
+    </p>
+
+    <table class="table table-hover">
+    <tr>
+        <th>Project</th>
+        <th>Download articles</th>
+        <th>Download annotations</th>
+    </tr>
+      {%  for p in projects %}
+          <tr>
+              <th>{{ p.id}}:{{ p.name }}</th>
+              <td>
+                  {% if p.has_articles %}
+                      <a href="{% url 'download_articles' project=p.id %}">Download</a> ({{ p.articles_size }})
+                  {% else %}
+                      <em style="color: grey">(Export in progress)</em>
+                  {% endif %}
+              </td>
+          </tr>
+    {%  endfor %}
+    </table>
+
+{%  endblock %}
