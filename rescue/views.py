@@ -11,7 +11,7 @@ from pathlib import Path
 EXPORT = Path.cwd()/"export"
 
 def articles_file(project: int) -> Path:
-    return EXPORT / "articles" / f"project_{project}.json.gz"
+    return EXPORT / "articles" / f"project_{project}.tgz"
 
 
 def add_suffix(size: int) -> str:
